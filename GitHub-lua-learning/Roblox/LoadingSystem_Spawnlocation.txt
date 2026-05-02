@@ -1,7 +1,6 @@
 -- This is a server script [script] the gray one
 -- Put this in ServerScriptService
-
-CODE:
+-- CODE:
 game.Workspace.SpawnLocation.Decal.Transparency = 1
 game.Workspace.SpawnLocation.CanCollide = false
 game.Workspace.SpawnLocation.Transparency = 1
