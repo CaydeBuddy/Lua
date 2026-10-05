@@ -1,0 +1,45 @@
+-- Place this script inside a Part in the Workspace
+-- Do not Do 1000000 For Jump Boost, May Be very Buggy [Did Not Test 1,000,000]
+local boostPart = script.Parent
+local BOOST_MULTIPLIER = 2 -- Multiplies the player's normal jump height/power
+local BOOST_DURATION = 5 -- How long the boost lasts in seconds
+
+-- A simple table to keep track of players currently on cooldown from this pad
+local debounce = {}
+
+local function onPartTouch(otherPart)
+	local character = otherPart.Parent
+	local humanoid = character:FindFirstChildOfClass("Humanoid")
+	local player = game.Players:GetPlayerFromCharacter(character)
+	
+	if humanoid and player and not debounce[player] then
+		debounce[player] = true
+		
+		-- Check whether the game uses JumpHeight or JumpPower
+		if humanoid.UseJumpPower then
+			local original = humanoid.JumpPower
+			humanoid.JumpPower = original * BOOST_MULTIPLIER
+			
+			task.wait(BOOST_DURATION)
+			
+			if humanoid and humanoid.Parent then
+				humanoid.JumpPower = original
+			end
+		else
+			local original = humanoid.JumpHeight
+			humanoid.JumpHeight = original * BOOST_MULTIPLIER
+			
+			task.wait(BOOST_DURATION)
+			
+			if humanoid and humanoid.Parent then
+				humanoid.JumpHeight = original
+			end
+		end
+		
+		-- Remove debounce for this specific player after they can use it again
+		task.wait(1)
+		debounce[player] = nil
+	end
+end
+
+boostPart.Touched:Connect(onPartTouch)
